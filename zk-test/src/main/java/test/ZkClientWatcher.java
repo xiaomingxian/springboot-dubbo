@@ -6,6 +6,10 @@ import org.apache.zookeeper.data.Stat;
 import java.util.concurrent.CountDownLatch;
 
 public class ZkClientWatcher implements Watcher {
+
+
+
+
     // 集群连接地址
     private static final String CONNECT_ADDRES = "49.234.25.12:2181";
     // 会话超时时间
@@ -90,8 +94,8 @@ public class ZkClientWatcher implements Watcher {
     public static void main(String[] args) throws KeeperException, InterruptedException {
         ZkClientWatcher zkClientWatcher = new ZkClientWatcher();
         zkClientWatcher.createConnection(CONNECT_ADDRES, SESSIONTIME);
-//        boolean createResult = zkClientWatcher.createPath("/p15", "pa-644064");
-        zkClientWatcher.updateNode("/p15","7894561");
+//        boolean createResult = zkClientWatcher.createPath("/p16", "pa-644064");
+        zkClientWatcher.updateNode("/p16","7894561");
     }
 
 }
