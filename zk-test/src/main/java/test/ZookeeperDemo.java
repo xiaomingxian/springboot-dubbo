@@ -26,6 +26,7 @@ public class ZookeeperDemo {
                 // 获取时间的状态
                 Event.KeeperState keeperState = event.getState();
                 Event.EventType tventType = event.getType();
+//                String path = event.getPath();
                 // 如果是建立连接
                 if (Event.KeeperState.SyncConnected == keeperState) {
                     if (Event.EventType.None == tventType) {
