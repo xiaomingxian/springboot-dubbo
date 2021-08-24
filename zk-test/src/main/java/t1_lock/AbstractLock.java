@@ -23,7 +23,9 @@ public abstract class AbstractLock {
             System.out.println(threadName+"-获取锁成功");
         }else {
             System.out.println(threadName+"-获取锁失败，进行等待...");
-            // 订阅节点的变化 存在则阻塞 不存在就 删除节点监听  再进行下一步 递归开始锁竞争
+            //simple锁   订阅节点的变化 存在则阻塞 不存在就 删除节点监听  再进行下一步 递归开始锁竞争
+            //有序临时锁  监听前一个节点的变化 前一个节点在 就阻塞 前一个节点被删除 就删除前一个节点监听 可进行下一步 递归开始竞争锁
+            //因为是有序节点 且每次都在前一个节点删除后才 下一个节点才会释放锁 所以实现了公平锁
             waitLock();
             //递归重新获取锁
             getLock();
