@@ -1,9 +1,6 @@
 package t1_lock.hightlock;
 
 
-
-
-
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
@@ -13,8 +10,8 @@ import t1_lock.AbstractLock;
 
 /**
  * 高性能分布式锁
- * @author hongtaolong
  *
+ * @author hongtaolong
  */
 public class HighPerformanceZkLock extends AbstractLock {
 
@@ -28,9 +25,13 @@ public class HighPerformanceZkLock extends AbstractLock {
 
     public HighPerformanceZkLock() {
         //如果不存在这个节点，则创建持久节点
-        if (!zkClient.exists(PATH)) {
-            zkClient.createPersistent(PATH);
+        synchronized (HighPerformanceZkLock.class){
+
+            if (!zkClient.exists(PATH)) {
+                zkClient.createPersistent(PATH);
+            }
         }
+
     }
 
     @Override
@@ -47,17 +48,17 @@ public class HighPerformanceZkLock extends AbstractLock {
         //如果currentPath为空则为第一次尝试加锁，第一次加锁赋值currentPath
         if (null == currentPath || "".equals(currentPath)) {
             //在path下创建一个临时的顺序节点
-            currentPath = zkClient.createEphemeralSequential(PATH+"/", "lock");
+            currentPath = zkClient.createEphemeralSequential(PATH + "/", "lock");
         }
         //获取所有的临时节点，并排序
         List<String> childrens = zkClient.getChildren(PATH);
         Collections.sort(childrens);
-        if (currentPath.equals(PATH+"/"+childrens.get(0))) {
+        if (currentPath.equals(PATH + "/" + childrens.get(0))) {
             return true;
-        }else {//如果当前节点不是排名第一，则获取它前面的节点名称，并赋值给beforePath
+        } else {//如果当前节点不是排名第一，则获取它前面的节点名称，并赋值给beforePath
             int pathLength = PATH.length();
-            int wz = Collections.binarySearch(childrens, currentPath.substring(pathLength+1));
-            beforePath = PATH+"/"+childrens.get(wz-1);
+            int wz = Collections.binarySearch(childrens, currentPath.substring(pathLength + 1));
+            beforePath = PATH + "/" + childrens.get(wz - 1);
         }
         return false;
     }
@@ -68,7 +69,7 @@ public class HighPerformanceZkLock extends AbstractLock {
 
             @Override
             public void handleDataDeleted(String dataPath) throws Exception {
-                if (null != countDownLatch){
+                if (null != countDownLatch) {
                     countDownLatch.countDown();
                 }
             }
