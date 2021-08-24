@@ -1,4 +1,4 @@
-package test;
+package t0_simple_test;
 
 
 
